@@ -1,0 +1,4569 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Samos Explorer — ένας σύγχρονος ψηφιακός οδηγός για τη Σάμο: παραλίες, χωριά, ιστορία, γαστρονομία, δραστηριότητες και διαδρομές." />
+  <meta name="theme-color" content="#0b7285" />
+  <script>
+    /* Αρχικοποίηση θέματος πριν φορτωθεί η σελίδα για να μην εμφανίζεται λευκό flash. */
+    try {
+      const savedTheme = localStorage.getItem('samos-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    } catch (error) {}
+  </script>
+  <title>Samos Explorer | Ανακάλυψε τη Σάμο</title>
+
+  <style>
+    :root {
+      --primary: #0b7285;
+      --primary-dark: #07596a;
+      --secondary: #ffd166;
+      --sea: #38bdf8;
+      --ink: #11212d;
+      --muted: #60717d;
+      --surface: #ffffff;
+      --surface-2: #f3f8fa;
+      --border: rgba(17, 33, 45, 0.09);
+      --shadow: 0 18px 55px rgba(12, 34, 45, .12);
+      --radius: 22px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    /* ---------- Header ---------- */
+
+    header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 1000;
+      transition: .3s ease;
+      padding: 14px 0;
+    }
+
+    header.scrolled {
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-weight: 900;
+      letter-spacing: -.03em;
+    }
+
+    header.scrolled .brand,
+    header.scrolled .nav-links a {
+      color: var(--ink);
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--sea));
+      box-shadow: 0 10px 25px rgba(11,114,133,.27);
+      font-size: 1.35rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .nav-links a {
+      color: white;
+      font-weight: 750;
+      padding: 9px 13px;
+      border-radius: 12px;
+      transition: .2s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,.15);
+    }
+
+    header.scrolled .nav-links a:hover {
+      background: var(--surface-2);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .icon-btn,
+    .menu-btn {
+      border: 0;
+      cursor: pointer;
+      width: 43px;
+      height: 43px;
+      border-radius: 13px;
+      background: rgba(255,255,255,.14);
+      color: white;
+      display: grid;
+      place-items: center;
+      transition: .2s;
+    }
+
+    header.scrolled .icon-btn,
+    header.scrolled .menu-btn {
+      background: var(--surface-2);
+      color: var(--ink);
+    }
+
+    .menu-btn {
+      display: none;
+      font-size: 1.15rem;
+    }
+
+    /* ---------- Hero ---------- */
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      color: white;
+      background:
+        radial-gradient(circle at 25% 18%, rgba(255,255,255,.22), transparent 23%),
+        radial-gradient(circle at 80% 65%, rgba(255,209,102,.2), transparent 22%),
+        linear-gradient(135deg, #07596a 0%, #0b7285 45%, #1d9eb6 100%);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(3px);
+      opacity: .35;
+    }
+
+    .hero::before {
+      width: 520px;
+      height: 520px;
+      background: rgba(56,189,248,.28);
+      right: -140px;
+      top: -120px;
+    }
+
+    .hero::after {
+      width: 440px;
+      height: 440px;
+      background: rgba(255,209,102,.16);
+      left: -160px;
+      bottom: -150px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 45px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      padding: 120px 0 70px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.24);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: .88rem;
+    }
+
+    h1 {
+      font-size: clamp(3.2rem, 7vw, 6.4rem);
+      line-height: .92;
+      margin: 18px 0 22px;
+      letter-spacing: -.055em;
+      max-width: 760px;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      font-size: 1.12rem;
+      color: rgba(255,255,255,.86);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 50px;
+      padding: 0 18px;
+      border-radius: 14px;
+      font-weight: 850;
+      transition: transform .2s, box-shadow .2s, background .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      color: #08353e;
+      background: var(--secondary);
+      box-shadow: 0 10px 25px rgba(255,209,102,.2);
+    }
+
+    .btn-ghost {
+      background: rgba(255,255,255,.13);
+      color: white;
+      border: 1px solid rgba(255,255,255,.24);
+    }
+
+    .hero-card {
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 25px 70px rgba(0,0,0,.13);
+    }
+
+    .island-illustration {
+      aspect-ratio: 1/1;
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+    }
+	.island-illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+	
+
+    .island-illustration::after {
+      content: "ΣΑΜΟΣ";
+      position: absolute;
+      inset: auto 0 22px;
+      text-align: center;
+      font-weight: 1000;
+      letter-spacing: .25em;
+      color: rgba(255,255,255,.86);
+      text-shadow: 0 2px 14px rgba(0,0,0,.2);
+    }
+
+    .hero-mini {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .mini-stat {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.09);
+      text-align: center;
+    }
+
+    .mini-stat strong {
+      display:block;
+      font-size: 1.1rem;
+    }
+
+    .mini-stat span {
+      font-size: .77rem;
+      color: rgba(255,255,255,.7);
+    }
+
+    /* ---------- Shared sections ---------- */
+
+    section {
+      padding: 95px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 25px;
+      margin-bottom: 38px;
+    }
+
+    .section-kicker {
+      color: var(--primary);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .77rem;
+    }
+
+    .section-head h2 {
+      margin: 8px 0 0;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      letter-spacing: -.045em;
+      line-height: 1;
+    }
+
+    .section-head p {
+      max-width: 630px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ---------- Highlights ---------- */
+
+    .highlights {
+      background: var(--surface-2);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 23px;
+      border-radius: 20px;
+      box-shadow: 0 7px 25px rgba(12,34,45,.05);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: #e2f4f8;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+
+    .feature h3 {
+      margin:0 0 7px;
+      font-size: 1.08rem;
+    }
+
+    .feature p {
+      margin:0;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    /* ---------- Discover ---------- */
+
+    .discover-grid {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 25px;
+    }
+
+    .filters {
+      position: sticky;
+      top: 86px;
+      align-self: start;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .filters h3 {
+      margin-top: 0;
+    }
+
+    .chip-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      cursor:pointer;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 999px;
+      font-weight: 750;
+      font-size: .87rem;
+      transition: .2s;
+    }
+
+    .chip.active,
+    .chip:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .search-box {
+      width: 100%;
+      border: 1px solid var(--border);
+      background:white;
+      padding: 13px 14px;
+      border-radius: 13px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(11,114,133,.09);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 16px;
+    }
+
+    .place-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow:hidden;
+      box-shadow: 0 9px 30px rgba(12,34,45,.06);
+      transition: .25s;
+    }
+
+    .place-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .place-visual {
+  height: 220px;
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+}
+
+.place-visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+    .place-visual::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,.45));
+    }
+
+    .v-beach {
+      background: linear-gradient(160deg, #6bd0ef 0 42%, #e9c885 42% 62%, #3f9a7b 62%);
+    }
+
+    .v-village {
+      background: linear-gradient(160deg, #f9c6a7 0 30%, #d38f63 30% 62%, #557d5e 62%);
+    }
+
+    .v-history {
+      background: linear-gradient(160deg, #c7ab7b 0 36%, #9e7a4e 36% 60%, #526f65 60%);
+    }
+
+    .v-food {
+      background: linear-gradient(160deg, #ffe7b0 0 40%, #e79f57 40% 60%, #708b4f 60%);
+    }
+
+    .v-nature {
+      background: linear-gradient(160deg, #a7dfc0 0 38%, #6fae7b 38% 65%, #315e48 65%);
+    }
+
+    .visual-title {
+      position: relative;
+      z-index: 2;
+      color: white;
+      font-weight: 900;
+      font-size: 1.2rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+
+    .place-body {
+      padding: 18px;
+    }
+
+    .place-body h3 {
+  margin: 0 0 6px;
+}
+
+    .place-body p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+
+    .meta {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      background: var(--surface-2);
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: .78rem;
+      font-weight: 750;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align:center;
+      padding: 40px;
+      border: 1px dashed #cbd6db;
+      border-radius: 20px;
+      color: var(--muted);
+    }
+
+    /* ---------- Planner ---------- */
+
+    #planner {
+      background:
+        radial-gradient(circle at 10% 15%, rgba(56,189,248,.12), transparent 25%),
+        linear-gradient(180deg, #f5fbfc 0%, #eaf7f9 100%);
+    }
+
+    .planner-wrap {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 25px;
+      align-items: start;
+    }
+
+    .planner-intro {
+      background: #0a2e38;
+      color: white;
+      padding: 32px;
+      border-radius: 24px;
+      position: sticky;
+      top: 86px;
+      overflow: hidden;
+    }
+
+    .planner-intro::before {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: rgba(56,189,248,.12);
+      right: -80px;
+      top: -70px;
+    }
+
+    .planner-intro h2 {
+      margin: 8px 0 14px;
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      letter-spacing: -.045em;
+      line-height: 1;
+      position: relative;
+    }
+
+    .planner-intro p {
+      color: rgba(255,255,255,.72);
+      position: relative;
+    }
+
+    .planner-points {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+      position: relative;
+    }
+
+    .planner-point {
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      font-weight: 700;
+    }
+
+    .planner-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .planner-card h3 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .planner-fields {
+      display: grid;
+      gap: 13px;
+    }
+
+    .planner-label {
+      font-weight: 850;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .planner-input,
+    .planner-select,
+    .planner-textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #f8fbfc;
+      color: var(--ink);
+      padding: 13px 14px;
+      border-radius: 13px;
+      outline: none;
+    }
+
+    .planner-input:focus,
+    .planner-select:focus,
+    .planner-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(11,114,133,.09);
+    }
+
+    .planner-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .planner-hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .planner-preview {
+      margin-top: 20px;
+      padding: 17px;
+      border-radius: 17px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .planner-preview.show {
+      display: block;
+    }
+
+    .planner-preview-title {
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .planner-preview p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    /* ---------- Generated plan ---------- */
+
+    .generated-plan {
+      display: grid;
+      gap: 13px;
+      margin-top: 18px;
+    }
+
+    .plan-day {
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      overflow: hidden;
+      background: var(--surface-2);
+    }
+
+    .plan-day-header {
+      padding: 13px 15px;
+      background: var(--primary);
+      color: white;
+      font-weight: 900;
+    }
+
+    .plan-day-body {
+      padding: 15px;
+    }
+
+    .plan-day-body strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .plan-day-body p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    /* ---------- Toast notification ---------- */
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: min(390px, calc(100% - 44px));
+      z-index: 2500;
+      background: #092d36;
+      color: white;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      transform: translateY(130px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .35s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-title {
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .toast-text {
+      color: rgba(255,255,255,.72);
+      font-size: .88rem;
+    }
+
+    /* ---------- Culture ---------- */
+
+    .culture-grid {
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap:17px;
+    }
+
+    .culture-card {
+      border:1px solid var(--border);
+      border-radius:20px;
+      overflow:hidden;
+      background:white;
+    }
+
+    .culture-top {
+      min-height: 155px;
+      display:grid;
+      place-items:center;
+      font-size: 4rem;
+      background: var(--surface-2);
+    }
+
+    .culture-card div:last-child {
+      padding: 19px;
+    }
+
+    .culture-card h3 {
+      margin:0 0 7px;
+    }
+
+    .culture-card p {
+      margin:0;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    /* ---------- Map ---------- */
+
+    .map-section {
+      background:#0a2e38;
+      color:white;
+    }
+
+    .map-wrap {
+      display:grid;
+      grid-template-columns: 1fr .75fr;
+      gap: 24px;
+      align-items:stretch;
+    }
+
+    .map-box {
+      min-height: 480px;
+      border-radius: 24px;
+      overflow:hidden;
+      background:
+        linear-gradient(135deg, rgba(56,189,248,.16), rgba(11,114,133,.16)),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 2px, transparent 2px 10px);
+      border:1px solid rgba(255,255,255,.1);
+      position:relative;
+    }
+
+    .map-frame {
+      width:100%;
+      height:100%;
+      min-height:480px;
+      border:0;
+      filter:saturate(.9);
+    }
+
+    .map-note {
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      background:rgba(5,24,29,.82);
+      backdrop-filter:blur(10px);
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:.84rem;
+      color:rgba(255,255,255,.78);
+    }
+
+    .map-copy h2 {
+      margin:0 0 12px;
+      font-size: clamp(2rem,4vw,3.4rem);
+      letter-spacing:-.045em;
+    }
+
+    .map-copy p {
+      color:rgba(255,255,255,.74);
+    }
+
+    .location-list {
+      display:grid;
+      gap:10px;
+      margin-top:22px;
+    }
+
+    .location {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 15px;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:15px;
+      background:rgba(255,255,255,.05);
+    }
+
+    .location span:first-child {
+      font-weight:850;
+    }
+
+    .location span:last-child {
+      color:rgba(255,255,255,.6);
+      font-size:.85rem;
+      text-align:right;
+    }
+
+    /* ---------- FAQ ---------- */
+
+    .faq {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    details {
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding: 0 18px;
+      margin-bottom:10px;
+      background:white;
+    }
+
+    summary {
+      cursor:pointer;
+      padding:18px 0;
+      font-weight:850;
+      list-style:none;
+      display:flex;
+      justify-content:space-between;
+      gap:15px;
+    }
+
+    summary::after {
+      content:"+";
+      color:var(--primary);
+      font-size:1.4rem;
+    }
+
+    details[open] summary::after {
+      content:"−";
+    }
+
+    details p {
+      color:var(--muted);
+      margin:0 0 18px;
+    }
+
+    /* ---------- Newsletter / contact ---------- */
+
+    .cta {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,.12), transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(255,209,102,.14), transparent 20%),
+        var(--primary);
+      color:white;
+      border-radius: 28px;
+      padding: 40px;
+      display:grid;
+      grid-template-columns: 1fr .8fr;
+      gap:30px;
+      align-items:center;
+    }
+
+    .cta h2 {
+      margin:0 0 10px;
+      font-size:clamp(2rem,4vw,3rem);
+      letter-spacing:-.04em;
+    }
+
+    .cta p {
+      margin:0;
+      color:rgba(255,255,255,.77);
+    }
+
+    .form {
+      display:grid;
+      gap:10px;
+    }
+
+    .form input,
+    .form textarea,
+    .form select {
+      width:100%;
+      border:1px solid rgba(255,255,255,.2);
+      background:rgba(255,255,255,.1);
+      color:white;
+      border-radius:13px;
+      padding:12px 13px;
+      outline:none;
+    }
+
+    .form input::placeholder,
+    .form textarea::placeholder {
+      color:rgba(255,255,255,.6);
+    }
+
+    .form select option {
+      color:var(--ink);
+    }
+
+    .form textarea {
+      min-height:100px;
+      resize:vertical;
+    }
+
+    /* ---------- Footer ---------- */
+
+    footer {
+      background:#06191f;
+      color:white;
+      padding: 55px 0 25px;
+    }
+
+    .footer-grid {
+      display:grid;
+      grid-template-columns: 1.2fr repeat(3,1fr);
+      gap:28px;
+      margin-bottom:35px;
+    }
+
+    footer h3 {
+      margin-top:0;
+    }
+
+    footer p,
+    footer a {
+      color:rgba(255,255,255,.63);
+    }
+
+    footer a:hover {
+      color:white;
+    }
+
+    .footer-bottom {
+      border-top:1px solid rgba(255,255,255,.09);
+      padding-top:18px;
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+      color:rgba(255,255,255,.47);
+      font-size:.86rem;
+    }
+
+    /* ---------- Modal ---------- */
+
+    .modal {
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.62);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:2000;
+      backdrop-filter: blur(6px);
+    }
+
+    .modal.open {
+      display:flex;
+    }
+
+    .modal-card {
+      width:min(700px, 100%);
+      max-height:90vh;
+      overflow:auto;
+      background:white;
+      border-radius:24px;
+      box-shadow:0 30px 100px rgba(0,0,0,.25);
+      padding:25px;
+      position:relative;
+    }
+
+    .close {
+      position:absolute;
+      top:13px;
+      right:13px;
+      width:39px;
+      height:39px;
+      border:0;
+      border-radius:12px;
+      cursor:pointer;
+      background:var(--surface-2);
+      font-size:1.2rem;
+    }
+
+    .modal-card h2 {
+      margin:0 45px 10px 0;
+    }
+
+    .modal-card .modal-meta {
+      color:var(--muted);
+      margin-bottom:16px;
+    }
+
+    .modal-card p {
+      color:#45555f;
+    }
+
+    /* ---------- Cookie bar ---------- */
+
+    .cookie {
+      position:fixed;
+      left:20px;
+      right:20px;
+      bottom:20px;
+      z-index:1500;
+      display:none;
+      background:#0f2930;
+      color:white;
+      padding:15px 17px;
+      border-radius:17px;
+      box-shadow:0 18px 55px rgba(0,0,0,.25);
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .cookie.show {
+      display:flex;
+    }
+
+    .cookie p {
+      margin:0;
+      color:rgba(255,255,255,.75);
+      font-size:.88rem;
+    }
+
+    .cookie .btn {
+      min-height:43px;
+    }
+
+    /* ---------- Responsive ---------- */
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .discover-grid,
+      .planner-wrap,
+      .map-wrap,
+      .cta {
+        grid-template-columns:1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .culture-grid {
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .filters,
+      .planner-intro {
+        position:static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width:min(var(--max), calc(100% - 28px));
+      }
+
+      .nav-links {
+        position:absolute;
+        top:66px;
+        left:14px;
+        right:14px;
+        padding:10px;
+        border-radius:17px;
+        background:rgba(8,35,43,.97);
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      header.scrolled .nav-links {
+        background:white;
+      }
+
+      .nav-links.open {
+        display:flex;
+      }
+
+      .nav-links a {
+        color:white;
+      }
+
+      header.scrolled .nav-links a {
+        color:var(--ink);
+      }
+
+      .menu-btn {
+        display:grid;
+      }
+
+      .icon-btn {
+        display:grid;
+      }
+
+      h1 {
+        font-size:clamp(3rem,17vw,5rem);
+      }
+
+      section {
+        padding:72px 0;
+      }
+
+      .feature-grid,
+      .cards,
+      .culture-grid {
+        grid-template-columns:1fr;
+      }
+
+      .section-head {
+        flex-direction:column;
+        align-items:start;
+      }
+
+      .hero-card {
+        margin-top:10px;
+      }
+
+      .footer-grid {
+        grid-template-columns:1fr;
+      }
+
+      .cta {
+        padding:27px;
+      }
+
+      .planner-card {
+        padding:20px;
+      }
+
+      .cookie {
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .cookie .btn {
+        width:100%;
+      }
+
+      .toast {
+        right:14px;
+        bottom:14px;
+        width:calc(100% - 28px);
+      }
+    }
+	/* ================= DARK MODE ================= */
+
+html[data-theme="dark"] {
+  --surface: #07181d;
+  --surface-2: #0d252c;
+  --ink: #eff8fa;
+  --muted: #a9bdc4;
+  --border: rgba(255,255,255,.09);
+}
+
+html[data-theme="dark"] body {
+  background: #07181d;
+  color: #eff8fa;
+}
+
+html[data-theme="dark"] .highlights,
+html[data-theme="dark"] #planner {
+  background: #081f26;
+}
+
+html[data-theme="dark"] .feature,
+html[data-theme="dark"] .place-card,
+html[data-theme="dark"] .culture-card,
+html[data-theme="dark"] details {
+  background: #0d252c;
+  border-color: rgba(255,255,255,.09);
+}
+
+html[data-theme="dark"] .filters {
+  background: #0b2229;
+  border-color: rgba(255,255,255,.09);
+}
+
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .planner-input,
+html[data-theme="dark"] .planner-select,
+html[data-theme="dark"] .planner-textarea {
+  background: #092128;
+  color: #eff8fa;
+  border-color: rgba(255,255,255,.1);
+}
+
+html[data-theme="dark"] .search-box::placeholder,
+html[data-theme="dark"] .planner-input::placeholder,
+html[data-theme="dark"] .planner-textarea::placeholder {
+  color: #78919a;
+}
+
+html[data-theme="dark"] .chip {
+  background: #0d252c;
+  color: #eff8fa;
+  border-color: rgba(255,255,255,.1);
+}
+
+html[data-theme="dark"] .tag {
+  background: #12323a;
+  color: #d9edf1;
+}
+
+html[data-theme="dark"] .section-head p,
+html[data-theme="dark"] .feature p,
+html[data-theme="dark"] .place-body p,
+html[data-theme="dark"] .culture-card p,
+html[data-theme="dark"] .planner-hint,
+html[data-theme="dark"] .planner-preview p,
+html[data-theme="dark"] details p {
+  color: #a9bdc4;
+}
+
+html[data-theme="dark"] .modal-card {
+  background: #0d252c;
+  color: #eff8fa;
+}
+
+html[data-theme="dark"] .modal-card .modal-meta,
+html[data-theme="dark"] .modal-card p {
+  color: #a9bdc4;
+}
+
+html[data-theme="dark"] .close {
+  background: #12323a;
+  color: #eff8fa;
+}
+  </style>
+  <style>
+  /* ================= LANGUAGE MENU ================= */
+
+  .language-menu {
+    position: relative;
+    z-index: 1200;
+  }
+
+  .language-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 0 13px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 12px;
+    background: rgba(255,255,255,.08);
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+    white-space: nowrap;
+  }
+
+  .language-toggle:hover {
+    background: rgba(255,255,255,.14);
+    transform: translateY(-1px);
+  }
+
+  .language-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 210px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 8px;
+    border-radius: 16px;
+    background: #ffffff;
+    color: #18343b;
+    box-shadow: 0 18px 45px rgba(0,0,0,.20);
+    border: 1px solid rgba(0,0,0,.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: .2s ease;
+  }
+
+  .language-menu.open .language-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .language-option {
+    display: block;
+    width: 100%;
+    padding: 11px 12px;
+    margin: 2px 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #18343b;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+
+  .language-option:hover {
+    background: #eef8fa;
+  }
+
+  .language-option.active {
+    background: #dff4f8;
+    font-weight: 800;
+  }
+
+  /* Το Google Translate παραμένει κρυφό και χρησιμοποιείται μόνο στο παρασκήνιο. */
+  #google_translate_element,
+  .goog-te-banner-frame.skiptranslate,
+  .goog-te-gadget-icon,
+  .goog-te-balloon-frame {
+    display: none !important;
+  }
+
+  body {
+    top: 0 !important;
+  }
+
+  /* ================= DARK MODE — ΠΛΗΡΗΣ ΚΑΛΥΨΗ ================= */
+
+  html[data-theme="dark"] {
+    --surface: #07181d;
+    --surface-2: #0d252c;
+    --ink: #eff8fa;
+    --muted: #a9bdc4;
+    --border: rgba(255,255,255,.09);
+  }
+
+  html[data-theme="dark"],
+  html[data-theme="dark"] body {
+    background: #07181d;
+    color: #eff8fa;
+  }
+
+  html[data-theme="dark"] header.scrolled {
+    background: rgba(7,24,29,.90);
+    box-shadow: 0 8px 30px rgba(0,0,0,.24);
+  }
+
+  html[data-theme="dark"] header.scrolled .brand,
+  html[data-theme="dark"] header.scrolled .nav-links a {
+    color: #eff8fa;
+  }
+
+  html[data-theme="dark"] header.scrolled .icon-btn,
+  html[data-theme="dark"] header.scrolled .menu-btn {
+    background: #0d252c;
+    color: #eff8fa;
+  }
+
+  html[data-theme="dark"] section:not(.hero):not(.map-section) {
+    background-color: #07181d;
+  }
+
+  html[data-theme="dark"] .highlights {
+    background: #081f26;
+  }
+
+  html[data-theme="dark"] #planner {
+    background:
+      radial-gradient(circle at 10% 15%, rgba(56,189,248,.08), transparent 25%),
+      linear-gradient(180deg, #081f26 0%, #07181d 100%);
+  }
+
+  html[data-theme="dark"] .feature,
+  html[data-theme="dark"] .place-card,
+  html[data-theme="dark"] .culture-card,
+  html[data-theme="dark"] details,
+  html[data-theme="dark"] .planner-card {
+    background: #0d252c;
+    color: #eff8fa;
+    border-color: rgba(255,255,255,.08);
+  }
+
+  html[data-theme="dark"] .feature-icon,
+  html[data-theme="dark"] .culture-top {
+    background: #12323a;
+  }
+
+  html[data-theme="dark"] .filters {
+    background: #0b2229;
+    border-color: rgba(255,255,255,.08);
+  }
+
+  html[data-theme="dark"] .search-box,
+  html[data-theme="dark"] .planner-input,
+  html[data-theme="dark"] .planner-select,
+  html[data-theme="dark"] .planner-textarea {
+    background: #092128;
+    color: #eff8fa;
+    border-color: rgba(255,255,255,.10);
+  }
+
+  html[data-theme="dark"] .search-box::placeholder,
+  html[data-theme="dark"] .planner-input::placeholder,
+  html[data-theme="dark"] .planner-textarea::placeholder {
+    color: #78919a;
+  }
+
+  html[data-theme="dark"] .chip {
+    background: #0d252c;
+    color: #eff8fa;
+    border-color: rgba(255,255,255,.10);
+  }
+
+  html[data-theme="dark"] .chip.active,
+  html[data-theme="dark"] .chip:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+
+  html[data-theme="dark"] .tag {
+    background: #12323a;
+    color: #d9edf1;
+  }
+
+  html[data-theme="dark"] .section-head p,
+  html[data-theme="dark"] .feature p,
+  html[data-theme="dark"] .place-body p,
+  html[data-theme="dark"] .culture-card p,
+  html[data-theme="dark"] .planner-hint,
+  html[data-theme="dark"] .planner-preview p,
+  html[data-theme="dark"] details p {
+    color: #a9bdc4;
+  }
+
+  html[data-theme="dark"] .planner-preview {
+    background: #0b2229;
+    border-color: rgba(255,255,255,.08);
+  }
+
+  html[data-theme="dark"] .modal-card {
+    background: #0d252c;
+    color: #eff8fa;
+  }
+
+  html[data-theme="dark"] .modal-card p,
+  html[data-theme="dark"] .modal-card .modal-meta {
+    color: #a9bdc4;
+  }
+
+  html[data-theme="dark"] .close {
+    background: #12323a;
+    color: #eff8fa;
+  }
+
+  html[data-theme="dark"] summary {
+    color: #eff8fa;
+  }
+
+  html[data-theme="dark"] .language-dropdown {
+    background: #0d252c;
+    color: #eff8fa;
+    border-color: rgba(255,255,255,.08);
+  }
+
+  html[data-theme="dark"] .language-option {
+    color: #eff8fa;
+  }
+
+  html[data-theme="dark"] .language-option:hover {
+    background: #12323a;
+  }
+
+  html[data-theme="dark"] .language-option.active {
+    background: #16404a;
+  }
+
+  html[data-theme="dark"] .cookie {
+    background: #0d252c;
+    color: #eff8fa;
+    border: 1px solid rgba(255,255,255,.08);
+  }
+
+  html[data-theme="dark"] .toast {
+    background: #06191f;
+    color: #eff8fa;
+  }
+
+  /* ================= MOBILE ================= */
+
+  @media (max-width: 720px) {
+    html,
+    body {
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 8px 0;
+    }
+
+    .nav {
+      gap: 8px;
+    }
+
+    .brand {
+      gap: 7px;
+      min-width: 0;
+      font-size: .92rem;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      flex: 0 0 auto;
+    }
+
+    .brand > span:last-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-actions {
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .language-toggle {
+      width: 40px;
+      min-height: 40px;
+      height: 40px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .language-toggle #currentLanguage,
+    .language-toggle .language-arrow {
+      display: none;
+    }
+
+    .icon-btn,
+    .menu-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
+
+    .language-dropdown {
+      right: 0;
+      width: min(210px, calc(100vw - 28px));
+      max-height: 240px;
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 100px 0 48px;
+    }
+
+    h1 {
+      font-size: clamp(2.9rem, 15vw, 4.6rem);
+    }
+
+    .hero-copy {
+      font-size: 1rem;
+    }
+
+    .hero-buttons {
+      flex-direction: column;
+    }
+
+    .hero-buttons .btn {
+      width: 100%;
+    }
+
+    .hero-card {
+      margin-top: 0;
+      padding: 14px;
+      border-radius: 22px;
+    }
+
+    .island-illustration {
+      border-radius: 18px;
+    }
+
+    section {
+      padding: 64px 0;
+    }
+
+    .feature-grid,
+    .cards,
+    .culture-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .discover-grid,
+    .planner-wrap,
+    .map-wrap,
+    .cta {
+      grid-template-columns: 1fr;
+    }
+
+    .filters,
+    .planner-intro {
+      position: static;
+    }
+
+    .place-visual {
+      height: 205px;
+    }
+
+    .planner-card {
+      padding: 20px;
+    }
+
+    .map-box,
+    .map-frame {
+      min-height: 420px;
+      height: 420px;
+    }
+
+    .cta {
+      padding: 24px;
+      border-radius: 22px;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cookie {
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cookie .btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .container {
+      width: min(var(--max), calc(100% - 20px));
+    }
+
+    .brand {
+      font-size: .84rem;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 14vw, 3.8rem);
+    }
+
+    .hero-mini {
+      gap: 7px;
+    }
+
+    .mini-stat {
+      padding: 10px 7px;
+    }
+
+    .mini-stat span {
+      font-size: .7rem;
+    }
+
+    .section-head h2,
+    .planner-intro h2,
+    .map-copy h2 {
+      font-size: 2rem;
+    }
+  }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+
+  <header id="header">
+    <div class="container nav">
+
+      <a class="brand" href="#top" aria-label="Samos Explorer αρχική">
+        <span class="brand-mark">🌊</span>
+        <span>SAMOS EXPLORER</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Κύρια πλοήγηση">
+        <a href="#discover">Ανακάλυψε</a>
+        <a href="#planner">Διαδρομή</a>
+        <a href="#culture">Πολιτισμός</a>
+        <a href="#map">Χάρτης</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+<div class="nav-actions">
+
+  <!-- LANGUAGE MENU -->
+  <div class="language-menu" id="languageMenu">
+
+    <button
+      class="language-toggle"
+      id="languageToggle"
+      type="button"
+      aria-expanded="false"
+      aria-haspopup="true"
+    >
+      <span class="language-icon" aria-hidden="true">🌐</span>
+
+<span id="currentLanguage">
+  Ελληνικά
+</span>
+
+<span
+  class="language-arrow"
+  aria-hidden="true"
+>
+  ▾
+</span>
+    </button>
+
+    <div
+      class="language-dropdown"
+      id="languageDropdown"
+      role="menu"
+    >
+      <div id="languageOptions">
+        <div style="padding:12px; opacity:.6;">
+          Φόρτωση γλωσσών...
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <button
+    class="icon-btn"
+    id="themeBtn"
+    aria-label="Εναλλαγή θέματος"
+  >
+    🌙
+  </button>
+
+
+  <button
+    class="menu-btn"
+    id="menuBtn"
+    aria-label="Άνοιγμα μενού"
+  >
+    ☰
+  </button>
+
+</div>
+    </div>
+  </header>
+
+
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+      <div class="container hero-grid">
+
+        <div>
+
+          <span class="eyebrow">
+            🇬🇷 Βόρειο Αιγαίο · Ελλάδα
+          </span>
+
+          <h1>
+            Η Σάμος.<br>
+            <span style="color:#ffe29a">Όλη δική σου.</span>
+          </h1>
+
+          <p class="hero-copy">
+            Ένας ψηφιακός οδηγός για να γνωρίσεις τη Σάμο μέσα από θάλασσα,
+            βουνό, χωριά, ιστορία, γεύσεις, πεζοπορία και εκείνες τις
+            διαδρομές που δεν χωράνε εύκολα σε έναν απλό ταξιδιωτικό οδηγό.
+          </p>
+
+          <div class="hero-buttons">
+
+            <a class="btn btn-primary" href="#discover">
+              Εξερεύνηση <span>→</span>
+            </a>
+
+            <!-- ΠΛΕΟΝ ΠΑΕΙ ΣΤΟ PLANNER -->
+            <a class="btn btn-ghost" href="#planner">
+              3ήμερη ιδέα 🗺️
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-card">
+
+<div class="island-illustration">
+  <img
+    src="https://www.newsit.gr/wp-content/uploads/2017n/07/sammos1.jpg"
+    alt="Πανοραμική θέα της Σάμου">
+</div>
+
+          <div class="hero-mini">
+
+            <div class="mini-stat">
+              <strong>🌊</strong>
+              <span>Παραλίες</span>
+            </div>
+
+            <div class="mini-stat">
+              <strong>⛰️</strong>
+              <span>Βουνό</span>
+            </div>
+
+            <div class="mini-stat">
+              <strong>🍇</strong>
+              <span>Κρασί</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= HIGHLIGHTS ================= -->
+
+    <section class="highlights">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+            <div class="section-kicker">Γιατί Σάμος</div>
+            <h2>Ένα νησί με πολλές πλευρές.</h2>
+          </div>
+
+          <p>
+            Η εμπειρία αλλάζει από περιοχή σε περιοχή:
+            παραθαλάσσιοι οικισμοί, ορεινά χωριά,
+            αρχαιολογικοί χώροι, τοπική κουζίνα και φύση.
+          </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+          <article class="feature">
+            <div class="feature-icon">🏖️</div>
+            <p>
+              Κολύμπι, ήσυχοι κόλποι, παραθαλάσσια χωριά
+              και νερά του Αιγαίου.
+            </p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">🌲</div>
+            <p>
+              Πράσινο τοπίο, βουνά, μονοπάτια και εναλλαγές
+              μέσα σε μικρές αποστάσεις.
+            </p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">🏛️</div>
+            <p>
+              Αρχαίες πόλεις, ιερά και μνημεία που συνδέουν
+              τη Σάμο με την αρχαιότητα.
+            </p>
+          </article>
+
+          <article class="feature">
+            <div class="feature-icon">🍷</div>
+            <p>
+              Μοσχάτο, τοπικά τυριά, ελιές, μαγειρευτά
+              και μεζέδες με νησιώτικο χαρακτήρα.
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= DISCOVER ================= -->
+
+    <section id="discover">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+            <div class="section-kicker">Εξερεύνηση</div>
+            <h2>Όλη η Σάμος σε ένα μέρος.</h2>
+          </div>
+
+          <p>
+            Χωριά, παραλίες, αξιοθέατα, μουσεία, μοναστήρια
+            και φυσικά σημεία. Αναζήτησε αυτό που θέλεις
+            ή χρησιμοποίησε τις κατηγορίες.
+          </p>
+
+        </div>
+
+
+        <div class="discover-grid">
+
+    <!-- FILTERS --> 
+ 
+<aside class="filters"> 
+
+  <input 
+    id="searchInput" 
+    class="search-box" 
+    type="search" 
+    placeholder="π.χ. Κοκκάρι, παραλία..." 
+    aria-label="Αναζήτηση στη Σάμο" 
+  /> 
+
+  <div class="chip-row" id="filterChips"> 
+
+    <button class="chip active" data-filter="all"> 
+      Όλα 
+    </button> 
+
+    <button class="chip" data-filter="village"> 
+      🏘️ Χωριά 
+    </button> 
+
+    <button class="chip" data-filter="beach"> 
+      🏖️ Παραλίες 
+    </button> 
+
+    <button class="chip" data-filter="history"> 
+      🏛️ Ιστορία 
+    </button> 
+
+    <button class="chip" data-filter="nature"> 
+      🌲 Φύση 
+    </button> 
+
+    <button class="chip" data-filter="museum"> 
+      🏺 Μουσεία 
+    </button> 
+
+    <button class="chip" data-filter="monastery"> 
+      ⛪ Μοναστήρια 
+    </button> 
+
+    <button class="chip" data-filter="food"> 
+      🍷 Γεύσεις 
+    </button> 
+
+  </div> 
+
+  <div 
+    style=" 
+      margin-top:20px; 
+      padding:15px; 
+      background:white; 
+      border-radius:15px; 
+      border:1px solid var(--border); 
+    "
+  > 
+
+    <strong id="resultCount"> 
+      0 σημεία 
+    </strong> 
+
+    <p 
+      style=" 
+        margin:5px 0 0; 
+        color:var(--muted); 
+        font-size:.85rem; 
+      "
+    > 
+      Η λίστα ενημερώνεται αυτόματα καθώς ψάχνεις. 
+    </p> 
+
+  </div> 
+
+</aside> 
+
+
+<!-- CARDS -->  
+  
+<div class="cards" id="cards">  
+  
+  <!-- ΧΩΡΙΑ -->  
+  
+  <article class="place-card" data-type="village" data-search="βαθύ πόλη σάμου πρωτεύουσα λιμάνι">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Samos_-_Vathi.jpg" alt="">  
+      <div class="visual-title">Βαθύ / Πόλη Σάμου</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Η πρωτεύουσα του νησιού, χτισμένη αμφιθεατρικά γύρω από τον φυσικό κόλπο.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Πόλη</span>  
+        <span class="tag">⚓ Λιμάνι</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="καρλόβασι νεο καρλόβασι λιμάνι πόλη">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Karlovasi.JPG" alt="">  
+      <div class="visual-title">Καρλόβασι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μεγάλη πόλη της δυτικής Σάμου με λιμάνι, παλιά βυρσοδεψεία και έντονη φοιτητική ζωή.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Πόλη</span>  
+        <span class="tag">⚓ Λιμάνι</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="πυθαγόρειο πόλη λιμάνι αρχαία σάμος">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Pythagorio.jpg" alt="">  
+      <div class="visual-title">Πυθαγόρειο</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραθαλάσσιος ιστορικός οικισμός στη θέση της αρχαίας Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">⚓ Λιμάνι</span>  
+        <span class="tag">🏛️ Ιστορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="κοκκάρι παραθαλάσσιο χωριό βόρεια">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Kokkari_Samos.jpeg" alt="">  
+      <div class="visual-title">Κοκκάρι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Γραφικός παραθαλάσσιος οικισμός στη βόρεια πλευρά της Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Χωριό</span>  
+        <span class="tag">🌊 Θάλασσα</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="μανωλάτες ορεινό χωριό καρβούνης">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Manolates_Samos_Grekland.JPG" alt="">  
+      <div class="visual-title">Μανωλάτες</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραδοσιακό ορεινό χωριό μέσα στο πράσινο, στις πλαγιές του Καρβούνη.</p>  
+      <div class="meta">  
+        <span class="tag">⛰️ Ορεινό</span>  
+        <span class="tag">🍷 Κρασί</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="βουρλιώτες χωριό καρβούνης μοναστήρι βροντά">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Vourliotes_Samos.jpg" alt="">  
+      <div class="visual-title">Βουρλιώτες</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ιστορικό ορεινό χωριό με πλακόστρωτα σοκάκια και έντονη οινική παράδοση.</p>  
+      <div class="meta">  
+        <span class="tag">⛰️ Ορεινό</span>  
+        <span class="tag">🍇 Αμπέλι</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="λέκκα χωριό καρλόβασι">  
+    <div class="place-visual v-village">  
+     <img src="https://www.samosin.gr/wp-content/uploads/Leka_image_2.jpg" alt="">  
+      <div class="visual-title">Λέκκα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραδοσιακό χωριό κοντά στο Καρλόβασι, χτισμένο στους πρόποδες του Κέρκη.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Χωριό</span>  
+        <span class="tag">🌲 Φύση</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="μυτιληνιοί χωριό παλαιοντολογικό">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Mytilinioi.jpg" alt="">  
+      <div class="visual-title">Μυτιληνιοί</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ένας από τους μεγαλύτερους οικισμούς της Σάμου, γνωστός και για το παλαιοντολογικό μουσείο.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Χωριό</span>  
+        <span class="tag">🏺 Μουσείο</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="άμπελος νένεδες χωριό">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Nenedes_Samos.JPG" alt="">  
+      <div class="visual-title">Άμπελος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ορεινός οικισμός με αμπέλια, δάση και μονοπάτια προς φυσικά σημεία.</p>  
+      <div class="meta">  
+        <span class="tag">⛰️ Ορεινό</span>  
+        <span class="tag">🍇 Αμπέλι</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="άγιος κωνσταντίνος χωριό όρμος">  
+    <div class="place-visual v-village">  
+      <img src="https://images.greece.com/panoramio/07/19/06/30/596ed261b7bd6.jpg" alt="">  
+      <div class="visual-title">Άγιος Κωνσταντίνος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραθαλάσσιος και ορεινός οικισμός στη βόρεια Σάμο.</p>  
+      <div class="meta">  
+        <span class="tag">🌊 Παραθαλάσσιος</span>  
+        <span class="tag">🏘️ Χωριό</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="κουμέικα χωριό νότια σάμος">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Koumaiika_Samos_1.jpg" alt="">  
+      <div class="visual-title">Κουμέικα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Γραφικό χωριό στο νότιο τμήμα του νησιού.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Χωριό</span>  
+        <span class="tag">🌿 Νότια Σάμος</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="σταυρινίδες χωριό καρβούνης">  
+    <div class="place-visual v-village">  
+      <img src="https://rlasschuyt.weebly.com/uploads/4/5/0/6/45060827/vakantie-samos-2018-stravrinides-005_1_orig.jpg" alt="">  
+      <div class="visual-title">Σταυρινίδες</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μικρός ορεινός οικισμός με θέα προς τη βόρεια πλευρά του νησιού.</p>  
+      <div class="meta">  
+        <span class="tag">⛰️ Ορεινό</span>  
+        <span class="tag">🥾 Μονοπάτια</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="χώρα σάμος παλιά πρωτεύουσα">  
+    <div class="place-visual v-village">  
+      <img src="https://www.grieksegids.nl/fotos/samos/groot/chora-samos-008.jpg" alt="">  
+      <div class="visual-title">Χώρα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Η παλιά πρωτεύουσα της Σάμου, κοντά στο αεροδρόμιο και στο Πυθαγόρειο.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Οικισμός</span>  
+        <span class="tag">📜 Ιστορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="μαραθόκαμπος χωριό νότια δυτικά">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Samos-Marathokampos-10-Gasse-1987-gje.jpg" alt="">  
+      <div class="visual-title">Μαραθόκαμπος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Αμφιθεατρικός οικισμός στη νοτιοδυτική Σάμο με θέα προς το Αιγαίο.</p>  
+      <div class="meta">  
+        <span class="tag">🏘️ Χωριό</span>  
+        <span class="tag">🌅 Θέα</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="πλάτανος χωριό καρλόβασι">  
+    <div class="place-visual v-village">  
+      <img src="https://www.samosin.gr/wp-content/uploads/cache/images/platanos_imsage_l_1/platanos_imsage_l_1-924473980.jpg" alt="">  
+      <div class="visual-title">Πλάτανος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ορεινό χωριό με παραδοσιακή πλατεία και πράσινο τοπίο.</p>  
+      <div class="meta">  
+        <span class="tag">⛰️ Ορεινό</span>  
+        <span class="tag">🌲 Φύση</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="καλλιθέα χωριό σάμος">  
+    <div class="place-visual v-village">  
+      <img src="https://www.isamos.gr/wp-content/uploads/2015/05/kallithea_1-660x495.jpg" alt=""> 
+      <div class="visual-title">Καλλιθέα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Οικισμός της δυτικής Σάμου με έντονο φυσικό χαρακτήρα.</p>  
+      <div class="meta">  
+        <span class="tag">🌲 Φύση</span>  
+        <span class="tag">🏘️ Οικισμός</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="village" data-search="δρακαίοι χωριό δυτική σάμος">  
+    <div class="place-visual v-village">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Drakei_(Samos)_2008.jpg" alt="">  
+      <div class="visual-title">Δρακαίοι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Απομονωμένος οικισμός της δυτικής Σάμου με άγριο φυσικό τοπίο.</p>  
+      <div class="meta">  
+        <span class="tag">🌲 Φύση</span>  
+        <span class="tag">⛰️ Δυτική Σάμος</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  
+  <!-- ΠΑΡΑΛΙΕΣ -->  
+  
+  <article class="place-card" data-type="beach" data-search="τσαμαδού παραλία κοκκάρι βότσαλο">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Tsamadou_542s.jpg" alt="">  
+      <div class="visual-title">Τσαμαδού</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Δημοφιλής παραλία κοντά στο Κοκκάρι με βότσαλο, βαθιά νερά και πεύκα.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">📍 Βόρεια</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="λεμονάκια μικρά μεγάλα λεμονάκια κοκκάρι">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Lemonakia_Beach,_Samos.jpg" alt="">  
+      <div class="visual-title">Λεμονάκια</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μικροί κόλποι με βότσαλο και πράσινο τοπίο κοντά στο Κοκκάρι.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🌿 Φύση</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="τσάμπου παραλία βόρεια σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://www.samosin.gr/wp-content/uploads/tsambou_beach_samos_1.jpg" alt="">  
+      <div class="visual-title">Τσάμπου</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραλία της βόρειας ακτής με χαρακτηριστικό βοτσαλωτό τοπίο.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🌊 Βόρεια</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="ποτάμι παραλία καρλόβασι καταρράκτες">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Potami_Beach,_Samos_-_panoramio.jpg" alt="">  
+      <div class="visual-title">Ποτάμι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραλία κοντά στο Καρλόβασι, δίπλα σε ένα από τα γνωστά φυσικά τοπία.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">💧 Καταρράκτες</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="μικρό σεϊτάνι παραλία δυτική σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Mikro_Seitani_Beach_in_Samos.jpg" alt="">  
+      <div class="visual-title">Μικρό Σεϊτάνι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Άγρια και δυσπρόσιτη παραλία της δυτικής Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🥾 Πεζοπορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="μεγάλο σεϊτάνι παραλία δυτική σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Samos_megalo_seitani.jpg" alt="">  
+      <div class="visual-title">Μεγάλο Σεϊτάνι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Απομονωμένη παραλία ανάμεσα στις πευκόφυτες πλαγιές.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🌲 Άγρια φύση</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="ψιλή άμμος παραλία άμμος ανατολική σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Aliki_Psili_Ammos_Samos.jpg" alt="">  
+      <div class="visual-title">Ψιλή Άμμος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραλία με άμμο και ρηχά νερά στην ανατολική πλευρά.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🏝️ Άμμος</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="μυκάλη παραλία πυθαγόρειο άμμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Mykali_Bay._-_panoramio.jpg" alt="">  
+      <div class="visual-title">Μυκάλη</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μεγάλη παραλία κοντά στο Πυθαγόρειο.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🏄 Water sports</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="κέρβελη παραλία ανατολική σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Kerveli,_Samos._-_panoramio.jpg" alt="">  
+      <div class="visual-title">Κέρβελη</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ήσυχος κόλπος στην ανατολική Σάμο, δημοφιλής για κολύμπι.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🤿 Κατάδυση</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="λιβαδάκι παραλία ανατολική σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://www.discovergreece.com/sites/default/files/styles/default/public/2022-09/aerial_view_of_livadaki_beach.jpg?itok=aPRBen_-" alt="">  
+      <div class="visual-title">Λιβαδάκι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μικρός γραφικός όρμος στην ανατολική πλευρά της Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🌿 Όρμος</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="καλαδάκια παραλία μαραθόκαμπος">  
+    <div class="place-visual v-beach">  
+      <img src="https://rlasschuyt.weebly.com/uploads/4/5/0/6/45060827/samos-2019-kaladakia-beach-008_orig.jpg" alt="">  
+      <div class="visual-title">Καλαδάκια</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Όμορφος κόλπος στη νοτιοδυτική πλευρά του νησιού.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🌿 Φύση</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="βοτσαλάκια παραλία μαραθόκαμπος">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Kampos_Votsalakia_beach_1.jpg" alt="">  
+      <div class="visual-title">Βοτσαλάκια</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μεγάλη παραλία στη νότια πλευρά, κοντά στον Μαραθόκαμπο.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">📍 Νότια</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="χρυσή άμμος μαραθόκαμπος παραλία">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Aliki_Psili_Ammos_Samos.jpg" alt="">
+      <div class="visual-title">Χρυσή Άμμος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Αμμώδης παραλία στην περιοχή του Μαραθόκαμπου.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🏝️ Άμμος</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="λιμνιώνας λιμιώνας μαραθόκαμπος παραλία">  
+    <div class="place-visual v-beach">  
+      <img src="https://www.samosin.gr/wp-content/uploads/limnionas_beach_samos_1.jpg" alt="">  
+      <div class="visual-title">Λιμνιώνας</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραλία της δυτικής πλευράς με φυσικό χαρακτήρα.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">🌅 Δυτικά</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="όρμος μαραθόκαμπου παραλία ψαροχώρι">  
+    <div class="place-visual v-beach">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Ormos-Marathokampos.jpg" alt="">  
+      <div class="visual-title">Όρμος Μαραθόκαμπου</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραθαλάσσιος οικισμός και παραλία στη νοτιοδυτική Σάμο.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">⚓ Όρμος</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="γάγκου παραλία βαθύ πόλη σάμου">  
+    <div class="place-visual v-beach">  
+      <img src="https://www.samosin.gr/wp-content/uploads/gagou_beach_samos_1.jpg" alt="">  
+      <div class="visual-title">Γάγκου</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραλία πολύ κοντά στην πόλη της Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🏖️ Παραλία</span>  
+        <span class="tag">📍 Βαθύ</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="ροδίτσες παραλία σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://www.greeka.com/village_beach/photos/1557/roditses-gallery-3-480.jpg" alt="">
+      <div class="visual-title">Ροδίτσες</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραθαλάσσια περιοχή κοντά στην πόλη της Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🌊 Θάλασσα</span>  
+        <span class="tag">📍 Βαθύ</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="beach" data-search="μαλαγάρι παραλία σάμος">  
+    <div class="place-visual v-beach">  
+      <img src="https://d2wzo7cpkz5upz.cloudfront.net/photos2/Samos/DS/N__WIP4034.jpg" alt="">  
+      <div class="visual-title">Μαλαγάρι</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Παραθαλάσσια περιοχή κοντά στην πόλη της Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🌊 Θάλασσα</span>  
+        <span class="tag">📍 Ανατολικά</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  
+  <!-- ΙΣΤΟΡΙΑ -->  
+  
+  <article class="place-card" data-type="history" data-search="ηραίον ναός ήρας αρχαιολογικός χώρος">  
+    <div class="place-visual v-history">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Heraion_of_Samos.jpg" alt="">  
+      <div class="visual-title">Ηραίον</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ένας από τους σημαντικότερους αρχαιολογικούς χώρους της Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🏛️ Αρχαιολογία</span>  
+        <span class="tag">🏺 Αρχαιότητα</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="history" data-search="ευπαλίνειο όρυγμα σήραγγα αρχαίο μηχανική">  
+    <div class="place-visual v-history">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Tunnel_of_Eupalinos.jpg" alt="">  
+      <div class="visual-title">Ευπαλίνειο Όρυγμα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Εντυπωσιακό αρχαίο υδραυλικό έργο και δείγμα αρχαίας μηχανικής.</p>  
+      <div class="meta">  
+        <span class="tag">🏛️ Μνημείο</span>  
+        <span class="tag">⛏️ Σήραγγα</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="history" data-search="αρχαία σάμος πολυκράτεια τείχος αρχαίο θέατρο">  
+    <div class="place-visual v-history">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Pythagoreio_Temple_of_Aphrodite.jpg" alt="">  
+      <div class="visual-title">Αρχαία Σάμος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ο αρχαιολογικός χώρος γύρω από το σημερινό Πυθαγόρειο.</p>  
+      <div class="meta">  
+        <span class="tag">🏛️ Αρχαιολογία</span>  
+        <span class="tag">📜 Ιστορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="history" data-search="σπήλαιο πυθαγόρα κέρκης ιστορία">  
+    <div class="place-visual v-history">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Pythagoras_Cave_inside_1.jpg" alt="">  
+      <div class="visual-title">Σπήλαιο Πυθαγόρα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Σπήλαιο στις πλαγιές του Κέρκη που συνδέεται με την παράδοση γύρω από τον Πυθαγόρα.</p>  
+      <div class="meta">  
+        <span class="tag">🪨 Σπήλαιο</span>  
+        <span class="tag">📜 Παράδοση</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  
+  <!-- ΦΥΣΗ -->  
+  
+  <article class="place-card" data-type="nature" data-search="καταρράκτες ποτάμι καρλόβασι φύση">  
+    <div class="place-visual v-nature">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Potami_Waterfalls,_Samos_-_panoramio.jpg" alt="">  
+      <div class="visual-title">Καταρράκτες Ποταμιού</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Φυσική διαδρομή μέσα στο πράσινο κοντά στο Καρλόβασι.</p>  
+      <div class="meta">  
+        <span class="tag">💧 Καταρράκτες</span>  
+        <span class="tag">🥾 Πεζοπορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="nature" data-search="όρος κέρκης βουνό πεζοπορία">  
+    <div class="place-visual v-nature">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Mount_Kerkis_from_south.jpg" alt="">  
+      <div class="visual-title">Όρος Κέρκης</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Το μεγάλο ορεινό συγκρότημα της δυτικής Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">⛰️ Βουνό</span>  
+        <span class="tag">🥾 Μονοπάτια</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="nature" data-search="καρβούνης άμπελος βουνό μονοπάτια">  
+    <div class="place-visual v-nature">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/%CE%8C%CF%81%CE%BF%CF%82_%CE%9A%CE%B1%CF%81%CE%B2%CE%BF%CF%8D%CE%BD%CE%B7%CF%82_%CE%A3%CE%AC%CE%BC%CE%BF%CF%82.jpg" alt="">  
+      <div class="visual-title">Καρβούνης / Άμπελος</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Καταπράσινη ορεινή περιοχή με χωριά, αμπέλια και μονοπάτια.</p>  
+      <div class="meta">  
+        <span class="tag">🌲 Βουνό</span>  
+        <span class="tag">🥾 Πεζοπορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  
+  <!-- ΜΟΥΣΕΙΑ -->  
+  
+  <article class="place-card" data-type="museum" data-search="μουσείο βυρσοδεψίας καρλόβασι">  
+    <div class="place-visual v-history">  
+      <img src="https://driverofsamos.gr/sites/default/files/images/article/2026/mouseio-byrsodecias-karlobasi_1.jpg" alt="">  
+      <div class="visual-title">Μουσείο Βυρσοδεψίας</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μουσείο στο Καρλόβασι που παρουσιάζει την ιστορία της βυρσοδεψίας.</p>  
+      <div class="meta">  
+        <span class="tag">🏺 Μουσείο</span>  
+        <span class="tag">Καρλόβασι</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="museum" data-search="αρχαιολογικό μουσείο σάμου βαθύ κούρος">  
+    <div class="place-visual v-history">  
+      <img src="https://64.media.tumblr.com/314193406f0526fb1b59398e8ed69a01/tumblr_inline_pk0o028ybo1rqellg_500.jpg" alt="">  
+      <div class="visual-title">Αρχαιολογικό Μουσείο</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Σημαντική συλλογή αρχαιολογικών ευρημάτων από το νησί.</p>  
+      <div class="meta">  
+        <span class="tag">🏺 Μουσείο</span>  
+        <span class="tag">📜 Ιστορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="museum" data-search="παλαιοντολογικό μουσείο μυτιληνιοί φυσικής ιστορίας">  
+    <div class="place-visual v-history">  
+      <img src="https://www.hellenic-travelgroup.com/files/Museums/Samos/natural%20history/mousio_fisikis_istoriasmitilinioi.jpg" alt="">  
+      <div class="visual-title">Παλαιοντολογικό Μουσείο</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Συλλογές φυσικής ιστορίας και παλαιοντολογικά ευρήματα από τη Σάμο.</p>  
+      <div class="meta">  
+        <span class="tag">🏺 Μουσείο</span>  
+        <span class="tag">🦴 Παλαιοντολογία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="museum" data-search="μουσείο οίνου σαμιακό κρασί μαλαγάρι">  
+    <div class="place-visual v-food">  
+      <img src="https://d3w13n53foase7.cloudfront.net/medium_40ce1031_2959_4d97_a897_5b2066d4bc13_samosin_gr_eoss_9bde9abbec.png" alt="">  
+      <div class="visual-title">Μουσείο Οίνου</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Χώρος αφιερωμένος στην οινική παράδοση και την ιστορία του σαμιώτικου κρασιού.</p>  
+      <div class="meta">  
+        <span class="tag">🍷 Κρασί</span>  
+        <span class="tag">🏺 Μουσείο</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  
+  <!-- ΜΟΝΑΣΤΗΡΙΑ -->  
+  
+  <article class="place-card" data-type="monastery" data-search="παναγία σπηλιανή μοναστήρι πυθαγόρειο">  
+    <div class="place-visual v-history">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Samos_070_2009.JPG" alt="">  
+      <div class="visual-title">Παναγία Σπηλιανή</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ιστορικός θρησκευτικός χώρος πάνω από το Πυθαγόρειο.</p>  
+      <div class="meta">  
+        <span class="tag">⛪ Μοναστήρι</span>  
+        <span class="tag">📍 Πυθαγόρειο</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="monastery" data-search="παναγία βροντά βουρλιώτες μοναστήρι">  
+    <div class="place-visual v-history">  
+      <img src="https://www.insel-samos.net/images/paratouchmatrix5268279e02134b9182.jpg" alt="">  
+      <div class="visual-title">Παναγία Βροντά</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Ιστορικό μοναστήρι κοντά στους Βουρλιώτες.</p>  
+      <div class="meta">  
+        <span class="tag">⛪ Μοναστήρι</span>  
+        <span class="tag">📜 Ιστορία</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="monastery" data-search="αγία τριάδα μυτιληνιοί μοναστήρι">  
+    <div class="place-visual v-history">  
+      <img src="https://www.insel-samos.net/images/agiatriadatitel_1038.jpg" alt="">  
+      <div class="visual-title">Αγία Τριάδα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Μοναστήρι κοντά στους Μυτιληνιούς.</p>  
+      <div class="meta">  
+        <span class="tag">⛪ Μοναστήρι</span>  
+        <span class="tag">📍 Μυτιληνιοί</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  
+  <!-- ΓΕΥΣΕΙΣ -->  
+  
+  <article class="place-card" data-type="food" data-search="μοσχάτο κρασί σαμιώτικο κρασί αμπέλι">  
+    <div class="place-visual v-food">  
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Samos_muscat_wine.jpg" alt="">  
+      <div class="visual-title">Σαμιώτικο Μοσχάτο</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Η οινική παράδοση είναι ένα από τα χαρακτηριστικά στοιχεία της Σάμου.</p>  
+      <div class="meta">  
+        <span class="tag">🍷 Κρασί</span>  
+        <span class="tag">🍇 Αμπέλι</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+  <article class="place-card" data-type="food" data-search="τοπική κουζίνα σαμος φαγητό τυρί ελιές">  
+    <div class="place-visual v-food">  
+      <img src="https://woty.nl/wp-content/uploads/2023/07/lokale-gerechten-Samos.jpg" alt="">  
+      <div class="visual-title">Σαμιώτικη Κουζίνα</div>  
+    </div>  
+    <div class="place-body">  
+      <p>Τοπικά προϊόντα, τυριά, ελιές, λαχανικά, μαγειρευτά και παραδοσιακοί μεζέδες.</p>  
+      <div class="meta">  
+        <span class="tag">🍽️ Γαστρονομία</span>  
+        <span class="tag">🫒 Τοπικά προϊόντα</span>  
+      </div>  
+    </div>  
+  </article>  
+  
+</div>  
+
+</div>  
+
+</div>  
+
+</section>
+    <!-- ================= PLANNER ================= -->
+
+    <section id="planner">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+            <div class="section-kicker">Smart Planner</div>
+            <h2>Φτιάξε το δικό σου 3ήμερο.</h2>
+          </div>
+
+          <p>
+            Διάλεξε τι θέλεις περισσότερο από τη Σάμο
+            και το Samos Explorer θα σου δημιουργήσει
+            ένα ενδεικτικό τριήμερο πλάνο.
+          </p>
+
+        </div>
+
+
+        <div class="planner-wrap">
+
+          <!-- ΑΡΙΣΤΕΡΑ -->
+
+          <div class="planner-intro">
+
+            <div class="section-kicker" style="color:#8edcf4">
+              Το ταξίδι σου
+            </div>
+
+            <h2>
+              Εσύ διαλέγεις.<br>
+              Εμείς οργανώνουμε.
+            </h2>
+
+            <p>
+              Το planner χρησιμοποιεί τις επιλογές σου
+              για να προτείνει διαφορετικές στάσεις
+              μέσα στις τρεις ημέρες.
+            </p>
+
+            <div class="planner-points">
+
+              <div class="planner-point">
+                🏖️ Παραλίες και θάλασσα
+              </div>
+
+              <div class="planner-point">
+                🏘️ Χωριά και βόλτες
+              </div>
+
+              <div class="planner-point">
+                🏛️ Ιστορία και πολιτισμός
+              </div>
+
+              <div class="planner-point">
+                🌲 Φύση και πεζοπορία
+              </div>
+
+              <div class="planner-point">
+                🍷 Γαστρονομία και κρασί
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ΔΕΞΙΑ -->
+
+          <div class="planner-card">
+
+            <h3>
+              ✨ Δημιούργησε το πλάνο σου
+            </h3>
+
+            <div class="planner-fields">
+
+              <div>
+
+                <label class="planner-label" for="plannerName">
+                  Πώς σε λένε;
+                </label>
+
+                <input
+                  id="plannerName"
+                  class="planner-input"
+                  type="text"
+                  placeholder="π.χ. Γιώργος"
+                  required
+                />
+
+              </div>
+
+
+              <div>
+
+                <label class="planner-label" for="plannerMood">
+                  Τι θέλεις περισσότερο;
+                </label>
+
+                <select
+                  id="plannerMood"
+                  class="planner-select"
+                >
+
+                  <option value="">
+                    Επίλεξε ενδιαφέρον...
+                  </option>
+
+                  <option value="beach">
+                    🏖️ Παραλίες
+                  </option>
+
+                  <option value="village">
+                    🏘️ Χωριά & βόλτα
+                  </option>
+
+                  <option value="history">
+                    🏛️ Ιστορία
+                  </option>
+
+                  <option value="nature">
+                    🌲 Φύση & πεζοπορία
+                  </option>
+
+                  <option value="food">
+                    🍷 Γαστρονομία
+                  </option>
+
+                  <option value="mixed">
+                    ✨ Λίγο απ' όλα
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div>
+
+                <label class="planner-label" for="plannerNotes">
+                  Κάτι ακόμα που θέλεις;
+                </label>
+
+                <textarea
+                  id="plannerNotes"
+                  class="planner-textarea"
+                  placeholder="π.χ. θέλω πιο ήρεμες παραλίες, χωριά, ηλιοβασίλεμα..."
+                ></textarea>
+
+              </div>
+
+
+              <p class="planner-hint">
+                💡 Η επιλογή σου θα εμφανίσει αυτόματα
+                μια μικρή προεπισκόπηση και μετά μπορείς
+                να δημιουργήσεις ολόκληρο το πλάνο.
+              </p>
+
+
+              <button
+                class="btn btn-primary"
+                id="createPlanBtn"
+                type="button"
+              >
+                Δημιουργία πλάνου ✨
+              </button>
+
+            </div>
+
+
+            <!-- PREVIEW -->
+
+            <div
+              class="planner-preview"
+              id="plannerPreview"
+            >
+
+              <div
+                class="planner-preview-title"
+                id="plannerPreviewTitle"
+              >
+                Το πλάνο σου
+              </div>
+
+              <p id="plannerPreviewText"></p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= CULTURE ================= -->
+
+    <section id="culture">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+            <div class="section-kicker">Πολιτισμός</div>
+            <h2>Πράγματα που αξίζει να ξέρεις.</h2>
+          </div>
+
+          <p>
+            Μερικά από τα θέματα που κάνουν τη Σάμο
+            ξεχωριστή πέρα από τις παραλίες.
+          </p>
+
+        </div>
+
+
+        <div class="culture-grid">
+
+          <article class="culture-card">
+            <div class="culture-top">🏛️</div>
+            <div>
+              <p>
+                Η Σάμος συνδέεται ιστορικά με τον Πυθαγόρα
+                και την ευρύτερη πνευματική παράδοση του νησιού.
+              </p>
+            </div>
+          </article>
+
+
+          <article class="culture-card">
+            <div class="culture-top">🦚</div>
+            <div>
+              <p>
+                Το Ηραίον αποτελεί ένα από τα σημαντικότερα
+                αρχαία σημεία του νησιού.
+              </p>
+            </div>
+          </article>
+
+
+          <article class="culture-card">
+            <div class="culture-top">🍇</div>
+            <div>
+              <p>
+                Οι αμπελώνες και το μοσχάτο έχουν σημαντικό
+                ρόλο στην ιστορία και την οικονομική ζωή της Σάμου.
+              </p>
+            </div>
+          </article>
+
+
+          <article class="culture-card">
+            <div class="culture-top">🌲</div>
+            <div>
+              <p>
+                Το βουνό δίνει έντονο ορεινό χαρακτήρα
+                στη δυτική πλευρά του νησιού.
+              </p>
+            </div>
+          </article>
+
+
+          <article class="culture-card">
+            <div class="culture-top">⛵</div>
+            <div>
+              <p>
+                Οι κόλποι, οι παραλίες και οι παραθαλάσσιοι
+                οικισμοί αποτελούν βασικό κομμάτι της καθημερινότητας.
+              </p>
+            </div>
+          </article>
+
+
+          <article class="culture-card">
+            <div class="culture-top">🏘️</div>
+            <div>
+              <p>
+                Από τη θάλασσα έως την ενδοχώρα,
+                το νησί έχει διαφορετικές τοπικές ταυτότητες.
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= MAP ================= -->
+
+    <section id="map" class="map-section">
+
+      <div class="container">
+
+        <div class="map-wrap">
+
+          <div class="map-box">
+
+            <iframe
+              class="map-frame"
+              title="Χάρτης Σάμου"
+              loading="lazy"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=26.50%2C37.65%2C27.10%2C37.95&amp;layer=mapnik&amp;marker=37.7548%2C26.9767">
+            </iframe>
+
+            <div class="map-note">
+              Ο ενσωματωμένος χάρτης χρησιμοποιεί OpenStreetMap.
+              Για ακριβείς διαδρομές/πλοήγηση χρησιμοποίησε
+              την εφαρμογή χαρτών της συσκευής σου.
+            </div>
+
+          </div>
+
+
+          <div class="map-copy">
+
+            <div
+              class="section-kicker"
+              style="color:#8edcf4"
+            >
+              Χάρτης
+            </div>
+
+            <h2>
+              Κράτα τη Σάμο στα χέρια σου.
+            </h2>
+
+            
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= FAQ ================= -->
+
+    <section id="faq">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+            <div class="section-kicker">FAQ</div>
+            <h2>Συχνές ερωτήσεις.</h2>
+          </div>
+
+          <p>
+            Γρήγορες απαντήσεις για να ξεκινήσεις
+            να οργανώνεις την εξερεύνησή σου.
+          </p>
+
+        </div>
+
+
+        <div class="faq">
+
+          <details>
+            <summary>
+              Ποια είναι τα βασικά μέρη της Σάμου;
+            </summary>
+
+            <p>
+              Ενδεικτικά: Βαθύ, Καρλόβασι, Πυθαγόρειο,
+              Μαραθόκαμπος και πολλοί μικρότεροι
+              οικισμοί και χωριά.
+            </p>
+          </details>
+
+
+          <details>
+            <summary>
+              Τι αξίζει περισσότερο, παραλίες ή βουνό;
+            </summary>
+
+            <p>
+              Η Σάμος προσφέρεται και για τα δύο.
+              Το planner μπορεί να δημιουργήσει
+              πλάνο ανάλογα με αυτό που προτιμάς.
+            </p>
+          </details>
+
+
+          <details>
+            <summary>
+              Χρειάζεται αυτοκίνητο;
+            </summary>
+
+            <p>
+              Για να δεις πολλές διαφορετικές περιοχές
+              μέσα σε λίγες ημέρες, ένα αυτοκίνητο ή άλλο
+              μέσο μετακίνησης μπορεί να κάνει την εξερεύνηση
+              ευκολότερη.
+            </p>
+          </details>
+
+
+          <details>
+            <summary>
+              Πότε είναι καλό να πάω;
+            </summary>
+
+            <p>
+              Η περίοδος που θα επιλέξεις εξαρτάται
+              από το τι θέλεις να κάνεις.
+            </p>
+          </details>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+
+          <div class="brand">
+
+            <span class="brand-mark">🌊</span>
+
+            <span>SAMOS EXPLORER</span>
+
+          </div>
+
+          <p style="margin-top:14px">
+            Ένα ταξιδιωτικό website αφιερωμένο στη Σάμο —
+            σχεδιασμένο να επεκταθεί εύκολα με πραγματικά δεδομένα,
+            φωτογραφίες, κρατήσεις και δικές σου σελίδες.
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <p>
+            <a href="#discover">Αξιοθέατα</a>
+          </p>
+
+          <p>
+            <a href="#planner">Διαδρομή</a>
+          </p>
+
+          <p>
+            <a href="#culture">Πολιτισμός</a>
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <p>
+            <a href="#map">Χάρτης</a>
+          </p>
+
+          <p>
+            <a href="#faq">Συχνές ερωτήσεις</a>
+          </p>
+
+          <p>
+            <a href="#top">Πάνω ↑</a>
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <p>Responsive layout</p>
+          <p>Vanilla HTML/CSS/JS</p>
+          <p>Χωρίς framework</p>
+
+        </div>
+
+      </div>
+
+
+      <div class="footer-bottom">
+
+        <span>
+          © <span id="year"></span> Samos Explorer
+        </span>
+
+        <span>
+          website Ωστε να γνωρισεις καλυτερα την Σαμο γρηγορα και ευκολα και να φτιαξεις το πλανο σου.
+        </span>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ================= MODAL ================= -->
+
+  <div
+    class="modal"
+    id="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+  >
+
+    <div class="modal-card">
+
+      <button
+        class="close"
+        id="closeModal"
+        aria-label="Κλείσιμο"
+      >
+        ✕
+      </button>
+
+      <h2 id="modalTitle">
+        Το πλάνο σου
+      </h2>
+
+      <div
+        class="modal-meta"
+        id="modalMeta"
+      ></div>
+
+      <div id="modalPlan"></div>
+
+      <p id="modalText"></p>
+
+      <button
+        class="btn btn-primary"
+        id="modalOk"
+      >
+        Τέλειο! 🌊
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= TOAST ================= -->
+
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+  >
+
+    <div
+      class="toast-title"
+      id="toastTitle"
+    >
+      ✨ Νέα επιλογή
+    </div>
+
+    <div
+      class="toast-text"
+      id="toastText"
+    >
+      Το πλάνο σου ενημερώθηκε.
+    </div>
+
+  </div>
+
+
+  <!-- ================= COOKIE ================= -->
+
+  <div
+    class="cookie"
+    id="cookie"
+  >
+
+    <p>
+      Σε αυτό το site. Δεν χρησιμοποιούνται cookies
+      τρίτων από τον ίδιο τον κώδικα της σελίδας.
+    </p>
+
+    <button
+      class="btn btn-primary"
+      id="cookieBtn"
+    >
+      Κατάλαβα
+    </button>
+
+  </div>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+<!-- GOOGLE TRANSLATE -->
+<div id="google_translate_element"></div>
+
+<script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'el',
+      includedLanguages: 'en',
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
+
+    /* =========================================
+       ΒΑΣΙΚΟ NAVIGATION
+    ========================================= */
+
+    const header = document.getElementById('header');
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    window.addEventListener('scroll', () => {
+
+      header.classList.toggle(
+        'scrolled',
+        window.scrollY > 30
+      );
+
+    });
+
+
+    menuBtn?.addEventListener('click', () => {
+
+      navLinks.classList.toggle('open');
+
+      menuBtn.textContent =
+        navLinks.classList.contains('open')
+          ? '✕'
+          : '☰';
+
+    });
+
+
+    navLinks.querySelectorAll('a').forEach(link => {
+
+      link.addEventListener('click', () => {
+
+        navLinks.classList.remove('open');
+
+        menuBtn.textContent = '☰';
+
+      });
+
+    });
+
+
+
+    /* =========================================
+   DARK MODE
+========================================= */
+
+const themeBtn = document.getElementById('themeBtn');
+
+function applyTheme(theme) {
+
+  document.documentElement.dataset.theme = theme;
+
+  if (theme === 'dark') {
+    themeBtn.textContent = '☀️';
+    themeBtn.setAttribute(
+      'aria-label',
+      'Εναλλαγή σε φωτεινό θέμα'
+    );
+  } else {
+    themeBtn.textContent = '🌙';
+    themeBtn.setAttribute(
+      'aria-label',
+      'Εναλλαγή σε σκοτεινό θέμα'
+    );
+  }
+
+  localStorage.setItem(
+    'samos-theme',
+    theme
+  );
+}
+
+themeBtn?.addEventListener('click', () => {
+
+  const currentTheme =
+    document.documentElement.dataset.theme ||
+    localStorage.getItem('samos-theme') ||
+    'light';
+
+  applyTheme(
+    currentTheme === 'dark'
+      ? 'light'
+      : 'dark'
+  );
+
+});
+
+applyTheme(
+  localStorage.getItem('samos-theme') || 'light'
+);
+
+
+    /* =========================================
+       SEARCH + FILTERS
+    ========================================= */
+
+    const searchInput =
+      document.getElementById('searchInput');
+
+    const cards = [
+      ...document.querySelectorAll('.place-card')
+    ];
+
+    const chips = [
+      ...document.querySelectorAll('.chip')
+    ];
+
+    const resultCount =
+      document.getElementById('resultCount');
+
+    let activeFilter = 'all';
+
+
+    function normalizeText(value) {
+
+      return value
+        .toLocaleLowerCase('el-GR')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+    }
+
+
+    function filterCards() {
+
+      const term =
+        normalizeText(
+          searchInput.value.trim()
+        );
+
+      let visible = 0;
+
+
+      cards.forEach(card => {
+
+        const type =
+          card.dataset.type;
+
+
+        const text =
+          normalizeText(
+            (card.dataset.search || '') +
+            ' ' +
+            card.innerText
+          );
+
+
+        const matchesFilter =
+          activeFilter === 'all' ||
+          type === activeFilter;
+
+
+        const matchesSearch =
+          !term ||
+          text.includes(term);
+
+
+        const show =
+          matchesFilter &&
+          matchesSearch;
+
+
+        card.style.display =
+          show ? '' : 'none';
+
+
+        if (show) {
+          visible++;
+        }
+
+      });
+
+
+      resultCount.textContent =
+        `${visible} ${
+          visible === 1
+            ? 'σημείο'
+            : 'σημεία'
+        }`;
+
+
+      document
+        .getElementById('emptyState')
+        ?.remove();
+
+
+      if (!visible) {
+
+        const empty =
+          document.createElement('div');
+
+        empty.id =
+          'emptyState';
+
+        empty.className =
+          'empty';
+
+        empty.textContent =
+          'Δεν βρέθηκε κάτι με αυτά τα φίλτρα. Δοκίμασε άλλη αναζήτηση.';
+
+        document
+          .getElementById('cards')
+          .appendChild(empty);
+
+      }
+
+    }
+
+
+    chips.forEach(chip => {
+
+      chip.addEventListener(
+        'click',
+        () => {
+
+          chips.forEach(c =>
+            c.classList.remove('active')
+          );
+
+          chip.classList.add('active');
+
+          activeFilter =
+            chip.dataset.filter;
+
+          filterCards();
+
+        }
+      );
+
+    });
+
+
+    searchInput.addEventListener(
+      'input',
+      filterCards
+    );
+
+
+    filterCards();
+
+
+
+    /* =========================================
+       SMART PLANNER
+    ========================================= */
+
+    const plannerName =
+      document.getElementById('plannerName');
+
+    const plannerMood =
+      document.getElementById('plannerMood');
+
+    const plannerNotes =
+      document.getElementById('plannerNotes');
+
+    const createPlanBtn =
+      document.getElementById('createPlanBtn');
+
+    const plannerPreview =
+      document.getElementById('plannerPreview');
+
+    const plannerPreviewTitle =
+      document.getElementById('plannerPreviewTitle');
+
+    const plannerPreviewText =
+      document.getElementById('plannerPreviewText');
+
+
+    /*
+      Τα πλάνα.
+      Κάθε επιλογή δημιουργεί διαφορετικό 3ήμερο.
+    */
+
+    const plans = {
+
+      beach: {
+
+        title: '🏖️ 3ήμερο με επίκεντρο τις παραλίες',
+
+        preview:
+          'Θάλασσα, παραλίες και παραθαλάσσιες στάσεις.',
+
+        days: [
+
+          {
+            title: 'Ημέρα 1 · Βόρεια Σάμος',
+            place: 'Κοκκάρι → Τσαμαδού → Λεμονάκια',
+            text:
+              'Ξεκίνα από το Κοκκάρι και συνέχισε προς Τσαμαδού και Λεμονάκια για μπάνιο και χαλαρή βόλτα.'
+          },
+
+          {
+            title: 'Ημέρα 2 · Δυτική Σάμος',
+            place: 'Καρλόβασι → Ποτάμι → Μικρό Σεϊτάνι',
+            text:
+              'Συνδύασε Καρλόβασι με Ποτάμι και, αν θέλεις περισσότερη φύση, συνέχισε προς το Μικρό Σεϊτάνι.'
+          },
+
+          {
+            title: 'Ημέρα 3 · Νότια Σάμος',
+            place: 'Μαραθόκαμπος → Βοτσαλάκια → Λιμνιώνας',
+            text:
+              'Κλείσε το ταξίδι με νότια και δυτική ακτογραμμή και ένα χαλαρό απογευματινό πέρασμα από τον Μαραθόκαμπο.'
+          }
+
+        ]
+
+      },
+
+
+      village: {
+
+        title: '🏘️ 3ήμερο με χωριά και βόλτες',
+
+        preview:
+          'Παραδοσιακοί οικισμοί, πλατείες και ορεινές διαδρομές.',
+
+        days: [
+
+          {
+            title: 'Ημέρα 1 · Κεντρική & βόρεια Σάμος',
+            place: 'Βουρλιώτες → Μανωλάτες → Κοκκάρι',
+            text:
+              'Ξεκίνα από τα ορεινά χωριά και κατέβα προς το Κοκκάρι για απογευματινή βόλτα.'
+          },
+
+          {
+            title: 'Ημέρα 2 · Δυτική Σάμος',
+            place: 'Καρλόβασι → Λέκκα → Πλάτανος',
+            text:
+              'Εξερεύνησε το Καρλόβασι και συνέχισε προς τους ορεινούς οικισμούς της περιοχής.'
+          },
+
+          {
+            title: 'Ημέρα 3 · Νότια Σάμος',
+            place: 'Μαραθόκαμπος → Όρμος Μαραθόκαμπου → Πυθαγόρειο',
+            text:
+              'Συνδύασε χωριό, θάλασσα και απογευματινή βόλτα στο Πυθαγόρειο.'
+          }
+
+        ]
+
+      },
+
+
+      history: {
+
+        title: '🏛️ 3ήμερο ιστορίας',
+
+        preview:
+          'Αρχαιολογία, Πυθαγόρειο, Ηραίον και μουσεία.',
+
+        days: [
+
+          {
+            title: 'Ημέρα 1 · Πυθαγόρειο',
+            place: 'Πυθαγόρειο → Αρχαία Σάμος → Παναγία Σπηλιανή',
+            text:
+              'Αφιέρωσε την πρώτη ημέρα στον ιστορικό πυρήνα του Πυθαγορείου και στα μνημεία της περιοχής.'
+          },
+
+          {
+            title: 'Ημέρα 2 · Ηραίον',
+            place: 'Ηραίον → Αρχαιολογικός χώρος → νότια ακτή',
+            text:
+              'Εξερεύνησε το Ηραίον και συνδύασέ το με μια χαλαρή στάση στη νότια πλευρά.'
+          },
+
+          {
+            title: 'Ημέρα 3 · Μουσεία',
+            place: 'Αρχαιολογικό Μουσείο → Μουσείο Οίνου → Καρλόβασι',
+            text:
+              'Κλείσε το ταξίδι με μουσεία και πολιτιστικές στάσεις πριν από μια βόλτα στο Καρλόβασι.'
+          }
+
+        ]
+
+      },
+
+
+      nature: {
+
+        title: '🌲 3ήμερο φύσης και πεζοπορίας',
+
+        preview:
+          'Βουνό, καταρράκτες, μονοπάτια και πιο άγρια τοπία.',
+
+        days: [
+
+          {
+            title: 'Ημέρα 1 · Ποτάμι',
+            place: 'Καρλόβασι → Καταρράκτες Ποταμιού',
+            text:
+              'Ξεκίνα με τη διαδρομή προς τους καταρράκτες και άφησε χρόνο για ξεκούραση στη φύση.'
+          },
+
+          {
+            title: 'Ημέρα 2 · Κέρκης',
+            place: 'Όρος Κέρκης → Δυτική Σάμος → Δρακαίοι',
+            text:
+              'Αφιέρωσε τη δεύτερη ημέρα στο ορεινό τοπίο της δυτικής Σάμου.'
+          },
+
+          {
+            title: 'Ημέρα 3 · Καρβούνης',
+            place: 'Άμπελος → Σταυρινίδες → Μανωλάτες',
+            text:
+              'Πέρασε από τα ορεινά χωριά και εξερεύνησε τα μονοπάτια και το πράσινο τοπίο.'
+          }
+
+        ]
+
+      },
+
+
+      food: {
+
+        title: '🍷 3ήμερο γαστρονομίας',
+
+        preview:
+          'Μοσχάτο, τοπικά προϊόντα, χωριά και σαμιώτικη κουζίνα.',
+
+        days: [
+
+          {
+            title: 'Ημέρα 1 · Οινική παράδοση',
+            place: 'Βουρλιώτες → αμπελώνες → σαμιώτικο κρασί',
+            text:
+              'Ξεκίνα με την οινική παράδοση και εξερεύνησε την περιοχή των αμπελώνων.'
+          },
+
+          {
+            title: 'Ημέρα 2 · Χωριά & τοπική κουζίνα',
+            place: 'Μανωλάτες → Άμπελος → παραδοσιακό γεύμα',
+            text:
+              'Συνδύασε ορεινά χωριά με τοπικές γεύσεις και προϊόντα.'
+          },
+
+          {
+            title: 'Ημέρα 3 · Πυθαγόρειο',
+            place: 'Πυθαγόρειο → παραθαλάσσια βόλτα → μεζέδες',
+            text:
+              'Κλείσε το ταξίδι με βόλτα στο Πυθαγόρειο και ένα χαλαρό γεύμα δίπλα στη θάλασσα.'
+          }
+
+        ]
+
+      },
+
+
+      mixed: {
+
+        title: '✨ 3ήμερο με λίγο απ’ όλα',
+
+        preview:
+          'Παραλίες, χωριά, ιστορία, φύση και γεύσεις.',
+
+        days: [
+
+          {
+            title: 'Ημέρα 1 · Πυθαγόρειο & ιστορία',
+            place: 'Πυθαγόρειο → Παναγία Σπηλιανή → Μυκάλη',
+            text:
+              'Ξεκίνα με ιστορία και κλείσε την ημέρα με θάλασσα.'
+          },
+
+          {
+            title: 'Ημέρα 2 · Βόρεια Σάμος',
+            place: 'Βουρλιώτες → Μανωλάτες → Κοκκάρι → Τσαμαδού',
+            text:
+              'Ορεινά χωριά, βόλτα και παραλία στην ίδια ημέρα.'
+          },
+
+          {
+            title: 'Ημέρα 3 · Δυτική Σάμος',
+            place: 'Καρλόβασι → Ποτάμι → Καταρράκτες → Μαραθόκαμπος',
+            text:
+              'Κλείσε το ταξίδι με πόλη, φύση και νότια/δυτική ακτογραμμή.'
+          }
+
+        ]
+
+      }
+
+    };
+
+
+
+    /* =========================================
+       TOAST
+    ========================================= */
+
+    const toast =
+      document.getElementById('toast');
+
+    const toastTitle =
+      document.getElementById('toastTitle');
+
+    const toastText =
+      document.getElementById('toastText');
+
+    let toastTimer;
+
+
+    function showToast(title, text) {
+
+      toastTitle.textContent = title;
+
+      toastText.textContent = text;
+
+      toast.classList.add('show');
+
+
+      clearTimeout(toastTimer);
+
+
+      toastTimer =
+        setTimeout(() => {
+
+          toast.classList.remove('show');
+
+        }, 5000);
+
+    }
+
+
+
+    /* =========================================
+       PREVIEW ΟΤΑΝ ΕΠΙΛΕΓΕΙ ΚΑΤΗΓΟΡΙΑ
+    ========================================= */
+
+    plannerMood.addEventListener(
+      'change',
+      () => {
+
+        const mood =
+          plannerMood.value;
+
+
+        if (!mood) {
+
+          plannerPreview.classList.remove('show');
+
+          return;
+
+        }
+
+
+        const plan =
+          plans[mood];
+
+
+        plannerPreviewTitle.textContent =
+          plan.title;
+
+
+        plannerPreviewText.textContent =
+          plan.preview;
+
+
+        plannerPreview.classList.add('show');
+
+
+        showToast(
+          '✨ Η επιλογή σου καταγράφηκε',
+          plan.preview
+        );
+
+      }
+    );
+
+
+
+    /* =========================================
+       ΔΗΜΙΟΥΡΓΙΑ ΠΛΑΝΟΥ
+    ========================================= */
+
+    function createPlan(name, mood, notes) {
+
+      const plan =
+        plans[mood];
+
+
+      if (!plan) {
+        return null;
+      }
+
+
+      const generated =
+        plan.days.map(day => {
+
+          return `
+            <div class="plan-day">
+
+              <div class="plan-day-header">
+                ${day.title}
+              </div>
+
+              <div class="plan-day-body">
+
+                <strong>
+                  📍 ${day.place}
+                </strong>
+
+                <p>
+                  ${day.text}
+                </p>
+
+              </div>
+
+            </div>
+          `;
+
+        }).join('');
+
+
+      return {
+
+        title:
+          `${plan.title} για ${name}`,
+
+        meta:
+          `👤 ${name} · ${plan.preview}`,
+
+        html:
+          `<div class="generated-plan">${generated}</div>`,
+
+        notes:
+          notes
+            ? `<strong>📝 Σημείωσή σου:</strong> ${notes}`
+            : ''
+
+      };
+
+    }
+
+
+
+    /* =========================================
+       MODAL
+    ========================================= */
+
+    const modal =
+      document.getElementById('modal');
+
+    const closeModal =
+      document.getElementById('closeModal');
+
+    const modalOk =
+      document.getElementById('modalOk');
+
+    const modalTitle =
+      document.getElementById('modalTitle');
+
+    const modalMeta =
+      document.getElementById('modalMeta');
+
+    const modalPlan =
+      document.getElementById('modalPlan');
+
+    const modalText =
+      document.getElementById('modalText');
+
+
+    function openPlanModal(plan) {
+
+      modalTitle.textContent =
+        plan.title;
+
+      modalMeta.textContent =
+        plan.meta;
+
+      modalPlan.innerHTML =
+        plan.html;
+
+      modalText.innerHTML =
+        plan.notes;
+
+
+      modal.classList.add('open');
+
+      document.body.style.overflow =
+        'hidden';
+
+    }
+
+
+    function closePlanModal() {
+
+      modal.classList.remove('open');
+
+      document.body.style.overflow =
+        '';
+
+    }
+
+
+    closeModal.addEventListener(
+      'click',
+      closePlanModal
+    );
+
+
+    modalOk.addEventListener(
+      'click',
+      closePlanModal
+    );
+
+
+    modal.addEventListener(
+      'click',
+      event => {
+
+        if (event.target === modal) {
+          closePlanModal();
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      'keydown',
+      event => {
+
+        if (
+          event.key === 'Escape' &&
+          modal.classList.contains('open')
+        ) {
+
+          closePlanModal();
+
+        }
+
+      }
+    );
+
+
+
+    /* =========================================
+       CREATE PLAN BUTTON
+    ========================================= */
+
+    createPlanBtn.addEventListener(
+      'click',
+      () => {
+
+        const name =
+          plannerName.value.trim();
+
+        const mood =
+          plannerMood.value;
+
+        const notes =
+          plannerNotes.value.trim();
+
+
+        if (!name) {
+
+          showToast(
+            '⚠️ Χρειάζεται όνομα',
+            'Γράψε πρώτα το όνομά σου για να δημιουργηθεί το πλάνο.'
+          );
+
+          plannerName.focus();
+
+          return;
+
+        }
+
+
+        if (!mood) {
+
+          showToast(
+            '⚠️ Διάλεξε ενδιαφέρον',
+            'Επίλεξε τι θέλεις περισσότερο από τη Σάμο.'
+          );
+
+          plannerMood.focus();
+
+          return;
+
+        }
+
+
+        const generatedPlan =
+          createPlan(
+            name,
+            mood,
+            notes
+          );
+
+
+        if (!generatedPlan) {
+          return;
+        }
+
+
+        /*
+          Αποθήκευση τελευταίου πλάνου
+          στον browser.
+        */
+
+        localStorage.setItem(
+          'samos-last-plan',
+          JSON.stringify({
+            name,
+            mood,
+            notes
+          })
+        );
+
+
+        openPlanModal(
+          generatedPlan
+        );
+
+
+        showToast(
+          '🎉 Το πλάνο σου είναι έτοιμο!',
+          'Το 3ήμερό σου δημιουργήθηκε με επιτυχία.'
+        );
+
+      }
+    );
+
+
+
+    /* =========================================
+       ΕΠΑΝΑΦΟΡΑ ΤΕΛΕΥΤΑΙΟΥ ΠΛΑΝΟΥ
+    ========================================= */
+
+    const savedPlan =
+      localStorage.getItem(
+        'samos-last-plan'
+      );
+
+
+    if (savedPlan) {
+
+      try {
+
+        const data =
+          JSON.parse(savedPlan);
+
+
+        if (data.name) {
+          plannerName.value =
+            data.name;
+        }
+
+
+        if (data.mood) {
+
+          plannerMood.value =
+            data.mood;
+
+
+          const plan =
+            plans[data.mood];
+
+
+          if (plan) {
+
+            plannerPreviewTitle.textContent =
+              plan.title;
+
+            plannerPreviewText.textContent =
+              plan.preview;
+
+            plannerPreview.classList.add(
+              'show'
+            );
+
+          }
+
+        }
+
+
+        if (data.notes) {
+
+          plannerNotes.value =
+            data.notes;
+
+        }
+
+      } catch (error) {
+
+        console.log(
+          'Δεν ήταν δυνατή η ανάκτηση του τελευταίου πλάνου.'
+        );
+
+      }
+
+    }
+
+
+
+    /* =========================================
+       COOKIE NOTICE
+    ========================================= */
+
+    const cookie =
+      document.getElementById('cookie');
+
+    const cookieBtn =
+      document.getElementById('cookieBtn');
+
+
+    if (
+      !localStorage.getItem(
+        'samos-cookie-ok'
+      )
+    ) {
+
+      cookie.classList.add('show');
+
+    }
+
+
+    cookieBtn.addEventListener(
+      'click',
+      () => {
+
+        localStorage.setItem(
+          'samos-cookie-ok',
+          '1'
+        );
+
+        cookie.classList.remove(
+          'show'
+        );
+
+      }
+    );
+
+
+
+    /* =========================================
+       CURRENT YEAR
+    ========================================= */
+
+    document.getElementById(
+      'year'
+    ).textContent =
+      new Date().getFullYear();
+ 
+</script>
+<script>
+/* =========================================
+   LANGUAGE MENU — ΕΛΛΗΝΙΚΑ / ENGLISH
+========================================= */
+
+const languageMenu = document.getElementById('languageMenu');
+const languageToggle = document.getElementById('languageToggle');
+const languageOptions = document.getElementById('languageOptions');
+const currentLanguage = document.getElementById('currentLanguage');
+
+function closeLanguageMenu() {
+  languageMenu?.classList.remove('open');
+  languageToggle?.setAttribute('aria-expanded', 'false');
+}
+
+function updateLanguageButtons(activeCode) {
+  languageOptions?.querySelectorAll('.language-option').forEach(button => {
+    button.classList.toggle(
+      'active',
+      button.dataset.lang === activeCode
+    );
+  });
+}
+
+function setLanguage(code) {
+  const googleSelect = document.querySelector('.goog-te-combo');
+
+  if (!googleSelect) {
+    return;
+  }
+
+  /* Ελληνικά = επιστροφή στην αρχική γλώσσα. English = Google Translate. */
+  googleSelect.value = code === 'en' ? 'en' : '';
+  googleSelect.dispatchEvent(
+    new Event('change', { bubbles: true })
+  );
+
+  if (currentLanguage) {
+    currentLanguage.textContent =
+      code === 'en' ? 'English' : 'Ελληνικά';
+  }
+
+  updateLanguageButtons(code);
+  closeLanguageMenu();
+}
+
+function buildLanguageMenu() {
+  if (!languageOptions) return;
+
+  languageOptions.innerHTML = `
+    <button
+      type="button"
+      class="language-option"
+      data-lang="el"
+      role="menuitem"
+    >
+      🇬🇷 Ελληνικά
+    </button>
+
+    <button
+      type="button"
+      class="language-option"
+      data-lang="en"
+      role="menuitem"
+    >
+      🇬🇧 English
+    </button>
+  `;
+
+  languageOptions
+    .querySelectorAll('.language-option')
+    .forEach(button => {
+      button.addEventListener('click', () => {
+        setLanguage(button.dataset.lang);
+      });
+    });
+
+  const googleSelect = document.querySelector('.goog-te-combo');
+
+  if (googleSelect) {
+    const isEnglish =
+      googleSelect.value === 'en' ||
+      document.cookie.includes('googtrans=/el/en');
+
+    const activeCode = isEnglish ? 'en' : 'el';
+
+    if (currentLanguage) {
+      currentLanguage.textContent =
+        activeCode === 'en' ? 'English' : 'Ελληνικά';
+    }
+
+    updateLanguageButtons(activeCode);
+  }
+}
+
+languageToggle?.addEventListener('click', event => {
+  event.stopPropagation();
+
+  const open =
+    languageMenu.classList.toggle('open');
+
+  languageToggle.setAttribute(
+    'aria-expanded',
+    String(open)
+  );
+});
+
+document.addEventListener('click', event => {
+  if (languageMenu && !languageMenu.contains(event.target)) {
+    closeLanguageMenu();
+  }
+});
+
+/* Ο Google Translate φορτώνεται ασύγχρονα. */
+buildLanguageMenu();
+
+if (!document.querySelector('.goog-te-combo')) {
+  setTimeout(buildLanguageMenu, 700);
+  setTimeout(buildLanguageMenu, 1500);
+  setTimeout(buildLanguageMenu, 2500);
+}
+</script>
+</body>
+</html>
